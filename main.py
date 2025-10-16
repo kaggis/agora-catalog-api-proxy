@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Query, HTTPException
+from fastapi import FastAPI, Query
 from typing import Optional
 import httpx
 import os
@@ -8,7 +8,7 @@ import asyncio
 
 load_dotenv()
 
-ARGO_EEN_SOURCE_API = os.getenv("ARGO_EEN_SOURCE_API")
+AGORA_CATALOG_API = os.getenv("AGORA_CATALOG_API")
 
 
 def get_version():
@@ -60,8 +60,8 @@ async def services(
     limit: Optional[int] = Query(10, alias="quantity")
 ):
 
-    if not ARGO_EEN_SOURCE_API:
-        return {"error": "ARGO_EEN_SOURCE_API not configured"}
+    if not AGORA_CATALOG_API:
+        return {"error": "AGORA_CATALOG_API env variable not configured"}
 
     async with httpx.AsyncClient() as client:
         (
@@ -73,13 +73,13 @@ async def services(
             access_response,
             resources_response,
         ) = await asyncio.gather(
-            client.get(f"{ARGO_EEN_SOURCE_API}/api/v2/public/domains/"),
-            client.get(f"{ARGO_EEN_SOURCE_API}/api/v2/public/categories/"),
-            client.get(f"{ARGO_EEN_SOURCE_API}/api/v2/public/order-types/"),
-            client.get(f"{ARGO_EEN_SOURCE_API}/api/v2/public/target-users/"),
-            client.get(f"{ARGO_EEN_SOURCE_API}/api/v2/public/trls/"),
-            client.get(f"{ARGO_EEN_SOURCE_API}/api/v2/public/access-modes/"),
-            client.get(f"{ARGO_EEN_SOURCE_API}/api/v2/public/resources/?offset={offset}&limit={limit}"),
+            client.get(f"{AGORA_CATALOG_API}/api/v2/public/domains/"),
+            client.get(f"{AGORA_CATALOG_API}/api/v2/public/categories/"),
+            client.get(f"{AGORA_CATALOG_API}/api/v2/public/order-types/"),
+            client.get(f"{AGORA_CATALOG_API}/api/v2/public/target-users/"),
+            client.get(f"{AGORA_CATALOG_API}/api/v2/public/trls/"),
+            client.get(f"{AGORA_CATALOG_API}/api/v2/public/access-modes/"),
+            client.get(f"{AGORA_CATALOG_API}/api/v2/public/resources/?offset={offset}&limit={limit}"),
         )
 
     domains = {dom["id"]: dom["eosc_id"] for dom in domains_response.json()}

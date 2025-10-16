@@ -1,5 +1,5 @@
-# argo-een
-API proxy to translate catalog data to een schema
+# Agora Catalog Api Proxy
+API proxy to translate catalog data to different schema
 
 ## Prerequisites
 
@@ -47,14 +47,14 @@ cp .env.example .env
 Create a `.env` file in the project root:
 
 ```env
-ARGO_EEN_SOURCE_API=https://api.example.com
+AGORA_CATALOG_API=https://api.example.com
 ```
 
 ### Environment Variables
 
 | Variable | Description | Required |
 |----------|-------------|----------|
-| `ARGO_EEN_SOURCE_API` | The external API endpoint to proxy results from | Yes |
+| `AGORA_CATALOG_API` | The external API endpoint to proxy results from | Yes |
 
 ## Running the Service
 

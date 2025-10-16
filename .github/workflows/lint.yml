@@ -1,0 +1,51 @@
+name: Python Code Quality Checks
+
+on:
+  push:
+    branches: [ main, devel ]
+  pull_request:
+    branches: [ main, devel ]
+
+jobs:
+  code-quality:
+    name: Run Linting
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9' 
+      
+      - name: Install tools
+        run: |
+          pip install --upgrade pip
+          pip install flake8 bandit mypy
+      
+      - name: Run flake8
+        run: |
+          echo "Running flake8..."
+          flake8 --max-line-length=120 .
+        working-directory: ${{ github.workspace }}/${{ env.PROJECT_DIR }}
+      
+      - name: Run bandit
+        run: |
+          echo "Running bandit..."
+          bandit -r .
+        working-directory: ${{ github.workspace }}/${{ env.PROJECT_DIR }}
+      
+      - name: Run mypy
+        run: |
+          echo "Running mypy..."
+          if find . -name "*.py" | grep -q .; then
+            mypy --disable-error-code=import-untyped --ignore-missing-imports .
+          else
+            echo "No Python files found. Skipping mypy."
+          fi
+        working-directory: ${{ github.workspace }}/${{ env.PROJECT_DIR }}
+
+env:
+  PROJECT_DIR: . 
